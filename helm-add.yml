@@ -1,0 +1,7 @@
+---
+- hosts: kube-master
+  gather_facts: True
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  roles:
+    - { role: create-storageclass }
+    - { role: deploy-efk-stack }

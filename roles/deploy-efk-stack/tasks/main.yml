@@ -1,0 +1,28 @@
+---
+- stat: path=/etc/cnva/efk.flag
+  register: cnva_efk
+
+- name: Unpack EFK Stack
+  unarchive:
+    src: ./src/efk/efk.zip
+    dest: /opt/CNVA-DEV
+  when: ansible_hostname == "{{ lookup('env','K8S_CLUSTER_NAME') |default('cnva') }}-master-1" and cnva_efk.stat.exists == False
+
+- name: Install EFK Stack - Elasticsearch
+  shell: "helm install --name elasticsearch --namespace efk /opt/CNVA-DEV/elasticsearch/"
+  when: ansible_hostname == "{{ lookup('env','K8S_CLUSTER_NAME') |default('CNVA-dev') }}-master-1" and cnva_efk.stat.exists == False
+
+- name: Install EFK Stack - Fluentd
+  shell: "helm install --name fluentd --namespace efk /opt/CNVA-DEV/fluentd-elasticsearch/"
+  when: ansible_hostname == "{{ lookup('env','K8S_CLUSTER_NAME') |default('CNVA-dev') }}-master-1" and cnva_efk.stat.exists == False
+
+- name: Install EFK Stack - Kibana
+  shell: "helm install --name kibana --namespace efk /opt/CNVA-DEV/kibana/"
+  when: ansible_hostname == "{{ lookup('env','K8S_CLUSTER_NAME') |default('CNVA-dev') }}-master-1" and cnva_efk.stat.exists == False
+
+- name: Create EFK flag
+  file: 
+    path: /etc/cnva/efk.flag
+    state: touch
+  when: ansible_hostname == "{{ lookup('env','K8S_CLUSTER_NAME') |default('CNVA-dev') }}-master-1" and cnva_efk.stat.exists == False
+
