@@ -1,7 +1,7 @@
 ### Discover-helm
 
-### For helm addon
+#### For deploying helm addon
 ansible-playbook helm-add.yml
 
-### For cluster deletion
+#### For cluster deletion
 ansible-playbook del-cluster.yml
