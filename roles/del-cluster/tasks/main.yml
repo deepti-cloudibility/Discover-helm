@@ -2,8 +2,8 @@
 - name: Delete instances
   #shell: "openstack server delete $(grep {{ lookup('env','K8S_CLUSTER_NAME') |default('cnva') }}/hosts.ini |sort -u|cut -d' ' -f1|tr '\n' ' ')"
   shell: "openstack server list"
-  shell: "openstack server delete server-ip $(grep otc-* {{ lookup('env','ADMIN_INSTANCE_SUFFIX') |default('cnva') }}_cluster/{{ lookup('env','ADMIN_INSTANCE_SUFFIX') |default('cnva') }}_hosts.ini |sort -u|cut -f 2 -d \"=\")"
+  shell: "openstack server delete $(grep otc-* {{ lookup('env','ADMIN_INSTANCE_SUFFIX') |default('cnva') }}_cluster/{{ lookup('env','ADMIN_INSTANCE_SUFFIX') |default('cnva') }}_hosts.ini |sort -u|cut -d' ' -f1|tr '\n' ' ')" )"
 - name: Delete inventory
   file:
-    path: "./cluster/{{ lookup('env','K8S_CLUSTER_NAME') |default('cnva') }}.ini"
+    path: "./cluster/{{ lookup('env','K8S_CLUSTER_NAME') |default('cnva') }}_hosts.ini"
     state: absent
